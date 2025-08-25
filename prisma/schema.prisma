@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  posts Post[]
+
+  @@map("users")
+}
+
+model Post {
+  id          String      @id @default(cuid())
+  title       String
+  content     String
+  excerpt     String?
+  slug        String      @unique
+  published   Boolean     @default(false)
+  category    PostCategory
+  imageUrl    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  publishedAt DateTime?
+
+  // Relations
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  @@map("posts")
+}
+
+model Member {
+  id          String     @id @default(cuid())
+  name        String
+  email       String     @unique
+  phone       String?
+  cpf         String?    @unique
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  profession  String?
+  company     String?
+  membershipType MembershipType @default(ASSOCIATE)
+  status      MemberStatus @default(PENDING)
+  joinedAt    DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("members")
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PostCategory {
+  NEWS
+  EVENT
+  ANNOUNCEMENT
+  GENERAL
+}
+
+enum MembershipType {
+  ASSOCIATE
+  COLLABORATOR
+  HONORARY
+}
+
+enum MemberStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
