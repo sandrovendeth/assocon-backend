@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -12,12 +19,14 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() body: { name: string; email: string; password: string }) {
+  async register(
+    @Body() body: { name: string; email: string; password: string },
+  ) {
     return this.authService.register(body.name, body.email, body.password);
   }
 
   @Post('logout')
-  async logout() {
+  logout() {
     // JWT is stateless, so we just return success
     // In a real app, you might want to blacklist tokens
     return { message: 'Logout successful' };
@@ -25,7 +34,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: any): any {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return req.user;
   }
 }

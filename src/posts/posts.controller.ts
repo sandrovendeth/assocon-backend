@@ -1,18 +1,19 @@
-import { 
-  Body, 
-  Controller, 
-  Delete, 
-  Get, 
-  Param, 
-  Post, 
-  Put, 
-  Query, 
-  UseGuards, 
-  Request 
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from './posts.service';
-import { PostCategory } from '@prisma/client';
+// Define PostCategory based on Prisma schema
+type PostCategory = 'NEWS' | 'EVENT' | 'ANNOUNCEMENT' | 'GENERAL';
 
 @Controller('posts')
 export class PostsController {
@@ -20,7 +21,8 @@ export class PostsController {
 
   @Get()
   async findAll(@Query('published') published?: string) {
-    const isPublished = published === 'true' ? true : published === 'false' ? false : undefined;
+    const isPublished =
+      published === 'true' ? true : published === 'false' ? false : undefined;
     return this.postsService.findAll(isPublished);
   }
 
@@ -37,7 +39,8 @@ export class PostsController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @Body() body: {
+    @Body()
+    body: {
       title: string;
       content: string;
       excerpt?: string;
@@ -58,7 +61,8 @@ export class PostsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() body: {
+    @Body()
+    body: {
       title?: string;
       content?: string;
       excerpt?: string;

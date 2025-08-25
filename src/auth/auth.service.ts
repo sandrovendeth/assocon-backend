@@ -3,6 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { DatabaseService } from '../database/database.service';
 import * as bcrypt from 'bcryptjs';
 
+interface UserWithoutPassword {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -10,21 +19,27 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<UserWithoutPassword | null> {
     const user = await this.databaseService.user.findUnique({
       where: { email },
     });
 
-    if (user && await bcrypt.compare(password, user.password)) {
-      const { password, ...result } = user;
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _password, ...result } = user;
       return result;
     }
     return null;
   }
 
   async login(email: string, password: string) {
+    console.log('LOGIN', email, password);
     const user = await this.validateUser(email, password);
     if (!user) {
+      console.log('INVALID CREDENTIALS');
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -42,7 +57,7 @@ export class AuthService {
 
   async register(name: string, email: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const user = await this.databaseService.user.create({
       data: {
         name,
@@ -51,7 +66,8 @@ export class AuthService {
       },
     });
 
-    const { password: _, ...result } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _password, ...result } = user;
     return result;
   }
 

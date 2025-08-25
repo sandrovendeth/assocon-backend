@@ -81,17 +81,20 @@ export class PostsService {
     });
   }
 
-  async update(id: string, data: {
-    title?: string;
-    content?: string;
-    excerpt?: string;
-    slug?: string;
-    category?: PostCategory;
-    imageUrl?: string;
-    published?: boolean;
-  }) {
+  async update(
+    id: string,
+    data: {
+      title?: string;
+      content?: string;
+      excerpt?: string;
+      slug?: string;
+      category?: PostCategory;
+      imageUrl?: string;
+      published?: boolean;
+    },
+  ) {
     const updateData: any = { ...data };
-    
+
     if (data.published !== undefined) {
       updateData.publishedAt = data.published ? new Date() : null;
     }

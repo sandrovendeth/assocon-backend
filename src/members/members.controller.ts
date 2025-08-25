@@ -1,13 +1,13 @@
-import { 
-  Body, 
-  Controller, 
-  Delete, 
-  Get, 
-  Param, 
-  Post, 
-  Put, 
-  Query, 
-  UseGuards 
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { MembersService } from './members.service';
@@ -30,19 +30,22 @@ export class MembersController {
   }
 
   @Post()
-  async create(@Body() body: {
-    name: string;
-    email: string;
-    phone?: string;
-    cpf?: string;
-    address?: string;
-    city?: string;
-    state?: string;
-    zipCode?: string;
-    profession?: string;
-    company?: string;
-    membershipType?: MembershipType;
-  }) {
+  async create(
+    @Body()
+    body: {
+      name: string;
+      email: string;
+      phone?: string;
+      cpf?: string;
+      address?: string;
+      city?: string;
+      state?: string;
+      zipCode?: string;
+      profession?: string;
+      company?: string;
+      membershipType?: MembershipType;
+    },
+  ) {
     return this.membersService.create(body);
   }
 
@@ -50,7 +53,8 @@ export class MembersController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() body: {
+    @Body()
+    body: {
       name?: string;
       email?: string;
       phone?: string;

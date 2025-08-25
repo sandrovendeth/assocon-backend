@@ -1,13 +1,13 @@
-import { 
-  Body, 
-  Controller, 
-  Delete, 
-  Get, 
-  Param, 
-  Post, 
-  Put, 
-  Query, 
-  UseGuards 
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ContactService } from './contact.service';
@@ -19,7 +19,8 @@ export class ContactController {
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async findAll(@Query('read') read?: string) {
-    const isRead = read === 'true' ? true : read === 'false' ? false : undefined;
+    const isRead =
+      read === 'true' ? true : read === 'false' ? false : undefined;
     return this.contactService.findAll(isRead);
   }
 
@@ -30,13 +31,16 @@ export class ContactController {
   }
 
   @Post()
-  async create(@Body() body: {
-    name: string;
-    email: string;
-    phone?: string;
-    subject: string;
-    message: string;
-  }) {
+  async create(
+    @Body()
+    body: {
+      name: string;
+      email: string;
+      phone?: string;
+      subject: string;
+      message: string;
+    },
+  ) {
     return this.contactService.create(body);
   }
 

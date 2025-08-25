@@ -39,20 +39,23 @@ export class MembersService {
     });
   }
 
-  async update(id: string, data: {
-    name?: string;
-    email?: string;
-    phone?: string;
-    cpf?: string;
-    address?: string;
-    city?: string;
-    state?: string;
-    zipCode?: string;
-    profession?: string;
-    company?: string;
-    membershipType?: MembershipType;
-    status?: MemberStatus;
-  }) {
+  async update(
+    id: string,
+    data: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      cpf?: string;
+      address?: string;
+      city?: string;
+      state?: string;
+      zipCode?: string;
+      profession?: string;
+      company?: string;
+      membershipType?: MembershipType;
+      status?: MemberStatus;
+    },
+  ) {
     return this.databaseService.member.update({
       where: { id },
       data,

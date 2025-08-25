@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: assocon-postgres
+    environment:
+      POSTGRES_DB: assocon_db
+      POSTGRES_USER: assocon_user
+      POSTGRES_PASSWORD: assocon_password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - assocon-network
+
+  app:
+    build: .
+    container_name: assocon-backend
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - assocon-network
+    command: npm run start:dev
+
+volumes:
+  postgres_data:
+
+networks:
+  assocon-network:
+    driver: bridge
